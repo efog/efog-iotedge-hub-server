@@ -26,18 +26,36 @@ func main() {
 	frontendHost = os.Getenv("FRONTEND_HOST")
 	frontendPort = os.Getenv("FRONTEND_PORT")
 
+	if backendHost == "" {
+		backendHost = "localhost"
+	}
+	if backendPort == "" {
+		backendPort = "56789"
+	}
+	if frontendHost == "" {
+		frontendHost = "localhost"
+	}
+	if frontendPort == "" {
+		frontendPort = "12345"
+	}
+
+	log.Printf("%s", backendHost)
+	log.Printf("%s", backendPort)
+	log.Printf("%s", frontendHost)
+	log.Printf("%s", frontendPort)
+
 	log.Print("Redirected standard library")
 	log.Print("Starting server")
-	wantFrontEndBind := fmt.Sprintf("tcp://*:%q", frontendPort)
-	wantFrontEndConnect := fmt.Sprintf("tcp://%q:%q", frontendHost, frontendPort)
-	wantBackEndBind := fmt.Sprintf("tcp://*:%q", backendPort)
-	wantBackEndConnect := fmt.Sprintf("tcp://%q:%q", backendHost, backendPort)
+	wantFrontEndBind := fmt.Sprintf("tcp://*:%s", frontendPort)
+	wantFrontEndConnect := fmt.Sprintf("tcp://%s:%s", frontendHost, frontendPort)
+	wantBackEndBind := fmt.Sprintf("tcp://*:%s", backendPort)
+	wantBackEndConnect := fmt.Sprintf("tcp://%s:%s", backendHost, backendPort)
 	server := efogIotEdgeHubServer.NewServer(&wantBackEndBind, &wantBackEndConnect, &wantFrontEndBind, &wantFrontEndConnect)
 
-	log.Printf("Frontend endpoint %q", wantFrontEndBind)
-	log.Printf("Frontend endpoint %q", wantFrontEndConnect)
-	log.Printf("Backend endpoint %q", wantBackEndBind)
-	log.Printf("Backend endpoint %q", wantBackEndConnect)
+	log.Printf("Frontend bind endpoint %s", wantFrontEndBind)
+	log.Printf("Frontend connect endpoint %s", wantFrontEndConnect)
+	log.Printf("Backend bind endpoint %s", wantBackEndBind)
+	log.Printf("Backend connect endpoint %s", wantBackEndConnect)
 
 	server.Run()
 }
